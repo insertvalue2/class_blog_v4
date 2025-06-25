@@ -1,6 +1,7 @@
 package com.tenco.blog.board;
 
 
+import com.tenco.blog._core.errors.exception.Exception403;
 import com.tenco.blog.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -44,7 +45,8 @@ public class BoardController {
 
         // 3.
         if( !board.isOwner(sessionUser.getId())) {
-            throw new RuntimeException("수정 권한이 없습니다");
+            // throw new RuntimeException("수정 권한이 없습니다");
+            throw new Exception403("권한이 없습니다");
         }
 
         // 4.
@@ -178,16 +180,14 @@ public class BoardController {
         }
     }
 
-
     @GetMapping("/")
     public String index(HttpServletRequest request) {
-
         // 1. 게시글 목록 조회
         List<Board> boardList = boardRepository.findByAll();
         // 2. 생각해볼 사항 - Board 엔티티에는 User 엔티티와 연관관계 중
         // 연관 관계 호출 확인
-        // boardList.get(0).getUser().getUsername();
-        // 3. 뷰에 데이터 전달
+        boardList.get(0).getUser().getUsername();
+        //3. 뷰에 데이터 전달
         request.setAttribute("boardList", boardList);
         return "index";
     }
